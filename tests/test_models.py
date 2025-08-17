@@ -104,3 +104,44 @@ class TestProductModel(unittest.TestCase):
     #
     # ADD YOUR TEST CASES HERE
     #
+
+    def test_read_a_product(self):
+        """It should read a Product"""
+        product = ProductFactory()
+        product.id = None
+        product.create()
+        self.assertIsNotNone(product.id)
+        
+        # Verifying product 
+        product_found = Product.find(product.id)
+        self.assertEqual(product_found.id, product.id)
+        self.assertEqual(product_found.name, product.name)
+        self.assertEqual(product_found.description, product.description)
+        self.assertEqual(product_found.price, product.price)
+
+
+    def test_update_a_product(self):
+        """It should Update a Product"""
+        product = ProductFactory()
+        # Set the ID of the product object to None and then call the create() method on the product.
+        product.id = None
+        product.create()
+        # Log the product object again after it has been created to verify that the product was created with the desired properties.
+        # Assert that the ID of the product object is not None after calling the create() method.
+        self.assertIsNotNone(product.id)
+        # Update the product in the system with the new property values using the update() method.
+        product.description = "Updated Description for testing"
+        # Assert that the id is same as the original id but description property of the product object has been updated correctly after calling the update() method.
+        original_id = product.id
+        product.update()
+        self.assertEqual(original_id, product.id)
+        self.assertEqual(product.description, "Updated Description for testing")
+        # Fetch all the product back from the system.
+        all_products = Product.all()
+        # Assert the length of the products list is equal to 1 to verify that after updating the product, there is only one product in the system.
+        self.assertEqual(len(all_products), 1)
+        self.assertEqual(all_products[0].id, original_id)
+        self.assertEqual(all_products[0].description, "Updated Description for testing")
+        # Assert that the fetched product has id same as the original id.
+        # Assert that the fetched product has the updated description.
+

@@ -27,7 +27,7 @@ import os
 import logging
 import unittest
 from decimal import Decimal
-from service.models import Product, Category, db
+from service.models import Product, Category, db, DataValidationError
 from service import app
 from tests.factories import ProductFactory
 
@@ -146,6 +146,10 @@ class TestProductModel(unittest.TestCase):
         self.assertEqual(all_products[0].id, original_id)
         # Assert that the fetched product has the updated description.
         self.assertEqual(all_products[0].description, "Updated Description for testing")
+        # Checking extra codes for Code Coverage
+        product.id = None
+        with self.assertRaises(DataValidationError):
+            product.update()
 
 
     def test_list_all_products(self):
@@ -201,7 +205,7 @@ class TestProductModel(unittest.TestCase):
             self.assertEqual(prod.available, first_prod_available)
 
 
-    def test_find_by_availability(self):
+    def test_find_by_category(self):
         """It should Find Products by Category"""
         products = ProductFactory.create_batch(10)
         # Use a for loop to iterate over the products list and call the create() method on each product to save them to the database.

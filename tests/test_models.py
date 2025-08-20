@@ -197,9 +197,9 @@ class TestProductModel(unittest.TestCase):
         # Use a list comprehension to filter the products based on their availability and then use len() to calculate the length of the filtered list, and use the variable called count to hold the number of products that have the specified availability.
         count = len([product for product in products if product.available == first_prod_available])
         # Call the find_by_availability() method on the Product class to retrieve products from the database that have the specified availability.
-        found_product = Product.find_by_availability(available)
+        found_product = Product.find_by_availability(first_prod_available)
         # Assert if the count of the found products matches the expected count.
-        self.assertEqual(len(found_product), count)
+        self.assertEqual(found_product.count(), count)
         # Use a for loop to iterate over the found products and assert that each product's availability matches the expected availability, to ensure that all the retrieved products have the correct availability.
         for prod in found_product:
             self.assertEqual(prod.available, first_prod_available)
@@ -224,4 +224,32 @@ class TestProductModel(unittest.TestCase):
             self.assertEqual(prod.category, first_prod_category)
 
 
+    # for Code Coverage
+    def test_delete_product(self):
+        """It should remove the product"""
 
+        products = Product.all()
+        self.assertEqual(products, [])
+        product = ProductFactory()
+        product.id = None
+        product.create()
+        self.assertIsNotNone(product.id)
+
+        product.delete()
+        found_product = Product.all()
+        self.assertEqual(len(found_product), 0)
+
+
+    def test_find_product_by_price(self):
+        """It finds the product by price"""
+        products = Product.all()
+        self.assertEqual(products, [])
+        product = ProductFactory()
+        product.id = None
+        product.create()
+        self.assertIsNotNone(product.id)
+        products = Product.all()
+        self.assertEqual(len(products), 1)
+
+        product_price = Product.find_by_price(str(product.price))
+        self.assertEqual(product, product_price[0])
